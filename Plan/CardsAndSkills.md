@@ -68,10 +68,8 @@
 > When a skill is used, skill is removed from player's hand.  
 > Player can refill your deck when player goes to village or drinks fountain.   
 ### 4. Rarity of skill
-> skills' rarity can be classified as common, rare, epic, legendary skills.  
-> If rarity of skill is high, then the skill is more powerful.  
-> Legendary skills are the most powerful skills.  
-> Player can use at most 3 legendary skills in deck.  
+> skills' rarity can be classified as common, rare, epic, skills.  
+> If rarity of skill is high, then the skill is more powerful.   
 ### 5. Attack and non-attack skill
 > Attack skills are skills which can deal damage directly to monsters.  
 > Non-attack skills are skills which can do other things.  
