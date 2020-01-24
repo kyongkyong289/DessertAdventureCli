@@ -3,7 +3,7 @@ class Player:
     max_hp = 25
     energy = 8
     max_energy = 8
-    attack = 0
+    attack = 3
     magic_attack = 0
     armor = 0
     magic_armor = 0
