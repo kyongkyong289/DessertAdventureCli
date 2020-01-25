@@ -5,4 +5,4 @@
 > 4. Added simple card system.
 >
 > Screenshot  
-> ![Gamedev0] (../Misc/Gamedev0_20200125_kyongkyong289.png)
+> ![Gamedev0](../Misc/Gamedev0_20200125_kyongkyong289.png)
