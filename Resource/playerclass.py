@@ -4,7 +4,7 @@ class Player:
     energy = 8
     max_energy = 8
     attack = 3
-    magic_attack = 0
+    magic_attack = 3
     armor = 0
     magic_armor = 0
     gold = 0
