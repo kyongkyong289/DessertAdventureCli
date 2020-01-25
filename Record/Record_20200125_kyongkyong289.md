@@ -1,4 +1,4 @@
-# Record
+# Record (2020-01-25)
 > 1. Added repository.
 > 2. Added map exploring system.
 > 3. Added battle mode.
