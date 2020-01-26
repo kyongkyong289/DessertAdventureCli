@@ -1,4 +1,5 @@
 class Player:
+    #Player stats
     hp = 25
     max_hp = 25
     energy = 8
@@ -14,3 +15,4 @@ class Player:
     hand = []
     deck = []
     deck_original = []
+    item = []
