@@ -74,7 +74,7 @@ def print_battle(target_player, target_enemy_list):
         else:
             window.addstr(15, 10 * (i - 5) + 1, str(target_player.hand[i][0]))
             window.addstr(16, 10 * (i - 5) + 1, str(target_player.hand[i][1]))
-            
+
 #Drawing cards
 def draw_card(target_player):
     if len(target_player.deck) > 0:
@@ -160,9 +160,9 @@ try:
         #While player is in battle
         if battle_mode == True:
             if battle_initiated == False:
-                enemy0 = enemyclass.Enemy(3, 10)
-                enemy1 = enemyclass.Enemy(3, 10)
-                enemy2 = enemyclass.Enemy(3, 10)
+                enemy0 = enemyclass.Enemy(3, 12)
+                enemy1 = enemyclass.Enemy(3, 12)
+                enemy2 = enemyclass.Enemy(3, 12)
                 enemy3 = enemyclass.Enemy(4, 10)
                 enemy4 = enemyclass.Enemy(4, 10)
                 enemy_list = [enemy0, enemy1, enemy2, enemy3, enemy4]
