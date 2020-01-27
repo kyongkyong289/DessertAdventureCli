@@ -22,6 +22,12 @@ def print_map(board):
             window.addstr(i, j * 4, "|")
         window.addstr(i, len(board[0]) * 4, "|")
 
+#Drawing cards
+def draw_card(target_player):
+    if len(target_player.deck) > 0:
+        temp = target_player.deck.pop(0)
+        target_player.hand.append(temp)
+
 #Printing player status
 def print_status(target_player):
     hp_percent = int(target_player.hp / target_player.max_hp * 100)
@@ -42,7 +48,7 @@ def print_status(target_player):
     if energy_percent != 0:
         for i in range(energy_percent // 10 + 1):
             window.addstr(4, 42 + i, '=', curses.color_pair(5))
-    
+
 #Printing battle scene
 def print_battle(target_player, target_enemy_list):
     hp_percent = int(target_player.hp / target_player.max_hp * 100)
@@ -123,12 +129,6 @@ def print_win(target_gold, target_exp):
     window.addstr(4, 12, 'You got ' + str(target_gold) + ' gold.')
     window.addstr(5, 12, 'You got ' + str(target_exp) + ' exp.')
     window.addstr(6, 12, 'Press any key to continue.')
-
-#Drawing cards
-def draw_card(target_player):
-    if len(target_player.deck) > 0:
-        temp = target_player.deck.pop(0)
-        target_player.hand.append(temp)
 
 try:
     #Setting curses
@@ -223,6 +223,9 @@ try:
                 enemy3 = enemyclass.Enemy(4, 10)
                 enemy4 = enemyclass.Enemy(4, 10)
                 enemy_list = [enemy0, enemy1, enemy2, enemy3, enemy4]
+                random.shuffle(player.deck)
+                for i in range(3):
+                    draw_card(player)
                 battle_initiated = True
 
             i = 0
@@ -243,6 +246,9 @@ try:
                 a = window.getch()
                 battle_mode = False
                 map_board[player.pos[0]][player.pos[1]] = '   '
+                for i in range(len(player.hand)):
+                    temp = player.hand.pop(0)
+                    player.deck.append(temp)
                 continue
                 
             #Printing lines
