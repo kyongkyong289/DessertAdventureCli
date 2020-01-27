@@ -262,19 +262,19 @@ try:
 
             #Getting command
             command = list(map(str, window.getstr().decode(encoding = 'utf-8').split()))
-
-            if command[0] == 'attack':
-                if len(command) > 1:
-                    if command[1] == '0' and len(enemy_list) > 0:
-                        enemy_list[0].hp -= player.attack
-                    if command[1] == '1' and len(enemy_list) > 1:
-                        enemy_list[1].hp -= player.attack
-                    if command[1] == '2' and len(enemy_list) > 2:
-                        enemy_list[2].hp -= player.attack
-                    if command[1] == '3' and len(enemy_list) > 3:
-                        enemy_list[3].hp -= player.attack
-                    if command[1] == '4' and len(enemy_list) > 4:
-                        enemy_list[4].hp -= player.attack
+            if len(command) > 0:
+                if command[0] == 'attack':
+                    if len(command) > 1:
+                        if command[1] == '0' and len(enemy_list) > 0:
+                            enemy_list[0].hp -= player.attack
+                        if command[1] == '1' and len(enemy_list) > 1:
+                            enemy_list[1].hp -= player.attack
+                        if command[1] == '2' and len(enemy_list) > 2:
+                            enemy_list[2].hp -= player.attack
+                        if command[1] == '3' and len(enemy_list) > 3:
+                            enemy_list[3].hp -= player.attack
+                        if command[1] == '4' and len(enemy_list) > 4:
+                            enemy_list[4].hp -= player.attack
 
             if command[0] == 'draw':
                 draw_card(player)
