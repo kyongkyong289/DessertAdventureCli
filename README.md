@@ -11,11 +11,11 @@ This is an open source project about the command line game DessertAdventure. Fee
 ```
 pip3 install windows-curses
 ```
-> 3. Clone the repository.
+> 3. Open the terminal.
+> 4. Clone the repository.
 ```
 git clone https://github.com/kyongkyong289/DessertAdventureCli
 ```
-> 4. Open the terminal.
 > 5. Go to the repository.
 > 6. Play the game!
 ```
