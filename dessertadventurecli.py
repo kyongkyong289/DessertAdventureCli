@@ -35,28 +35,34 @@ def print_status(target_player):
                 window.addstr(2, 42 + i, '=', curses.color_pair(4))
             else:
                 window.addstr(2, 42 + i, '=', curses.color_pair(2))
+
     window.addstr(3, 41, 'Energy ' + str(target_player.energy) + '/' + str(target_player.max_energy))
+    window.addstr(4, 41, '(')
+    window.addstr(4, 53, ')')
     if energy_percent != 0:
         for i in range(energy_percent // 10 + 1):
             window.addstr(4, 42 + i, '=', curses.color_pair(5))
-    window.addstr(4, 41, '(')
-    window.addstr(4, 53, ')')
     
 #Printing battle scene
 def print_battle(target_player, target_enemy_list):
+    hp_percent = int(target_player.hp / target_player.max_hp * 100)
+    energy_percent = int(target_player.energy / target_player.max_energy * 100)
+
     window.addstr(0, 0, '#')
-    window.addstr(0, 49, '#')
+    window.addstr(0, 59, '#')
     window.addstr(10, 0, '#')
-    window.addstr(10, 49, '#')
-    for i in range(1, 49):
+    window.addstr(10, 59, '#')
+    for i in range(1, 59):
         window.addstr(0, i, '=')
         window.addstr(10, i, '=')
     for i in range(1, 10):
         window.addstr(i, 0, '|')
-        window.addstr(i, 49, '|')
+        window.addstr(i, 59, '|')
     window.addstr(11, 0, '>')
 
     window.addstr(3, 2, 'PPP')
+
+    #Printing enemies
     for i in range(len(target_enemy_list)):
         if i < 3:
             window.addstr(1 + 3 * i, 25, str(i) + '. EEE')
@@ -65,15 +71,58 @@ def print_battle(target_player, target_enemy_list):
             window.addstr(1 + 3 * (i - 3), 35, str(i) + '. EEE')
             window.addstr(2 + 3 * (i - 3), 35, str(target_enemy_list[i].hp) + '/' + str(target_enemy_list[i].max_hp))
 
-    for i in range(0, 50):
+    #Printing hand
+    for i in range(0, 60):
         window.addstr(12, i, '=')
     for i in range(len(target_player.hand)):
-        if i < 5:
-            window.addstr(13, 10 * i + 1, str(target_player.hand[i][0]))
-            window.addstr(14, 10 * i + 1, str(target_player.hand[i][1]))
+        if i < 4:
+            window.addstr(13, 15 * i + 1, str(target_player.hand[i][0]))
+            window.addstr(14, 15 * i + 1, str(target_player.hand[i][1]))
         else:
-            window.addstr(15, 10 * (i - 5) + 1, str(target_player.hand[i][0]))
-            window.addstr(16, 10 * (i - 5) + 1, str(target_player.hand[i][1]))
+            window.addstr(15, 15 * (i - 4) + 1, str(target_player.hand[i][0]))
+            window.addstr(16, 15 * (i - 4) + 1, str(target_player.hand[i][1]))
+
+    for i in range(0, 60):
+        window.addstr(17, i, '=')
+
+    #Printing hp, energy bars
+    window.addstr(18, 1, 'HP : ' + str(target_player.hp) + '/' + str(target_player.max_hp))
+    window.addstr(18, 31, 'Energy : ' + str(target_player.energy) + '/' + str(target_player.max_energy))
+    if hp_percent != 0:
+        for i in range(hp_percent // 5 + 1):
+            if hp_percent > 30:
+                window.addstr(19, 2 + i, '=', curses.color_pair(4))
+            else:
+                window.addstr(19, 2 + i, '=', curses.color_pair(2))
+
+    if energy_percent != 0:
+        for i in range(energy_percent // 5 + 1):
+            window.addstr(19, 32 + i, '=', curses.color_pair(5))
+
+    window.addstr(19, 1, '(')
+    window.addstr(19, 23, ')')
+    window.addstr(19, 31, '(')
+    window.addstr(19, 53, ')')
+
+#Printing win window
+def print_win(target_gold, target_exp):
+    window.addstr(2, 10, '#')
+    window.addstr(2, 49, '#')
+    window.addstr(8, 10, '#')
+    window.addstr(8, 49, '#')
+    for i in range(11, 49):
+        window.addstr(2, i, '=')
+        window.addstr(8, i, '=')
+    for i in range(3, 8):
+        window.addstr(i, 10, '|')
+        window.addstr(i, 49, '|')
+    for i in range(3, 8):
+        for j in range(11, 49):
+            window.addstr(i, j, ' ')
+    window.addstr(3, 12, 'You win!')
+    window.addstr(4, 12, 'You got ' + str(target_gold) + ' gold.')
+    window.addstr(5, 12, 'You got ' + str(target_exp) + ' exp.')
+    window.addstr(6, 12, 'Press any key to continue.')
 
 #Drawing cards
 def draw_card(target_player):
@@ -111,7 +160,7 @@ try:
 
     #Setting player's hand and deck
     player.hand = []
-    player.deck = [[2, 'fireball'], [2, 'fireball'], [2, 'fireball'], [1, 'firebolt'], [1, 'firebolt'], [1, 'firebolt']]
+    player.deck = [[6, 'firestorm'], [2, 'fireball'], [2, 'fireball'], [1, 'firebolt'], [1, 'firebolt'], [1, 'firebolt']]
 
     map_board = [['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
@@ -184,6 +233,14 @@ try:
                     i = i + 1
 
             if len(enemy_list) == 0:
+                window.erase()
+                print_battle(player, enemy_list)
+                print_win(10, 10)
+                window.refresh()
+
+                curses.cbreak()
+                curses.curs_set(0)
+                a = window.getch()
                 battle_mode = False
                 map_board[player.pos[0]][player.pos[1]] = '   '
                 continue
