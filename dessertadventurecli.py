@@ -74,8 +74,8 @@ def print_battle(target_player, target_enemy_list):
             window.addstr(1 + 3 * i, 25, str(i) + '. EEE')
             window.addstr(2 + 3 * i, 25, str(target_enemy_list[i].hp) + '/' + str(target_enemy_list[i].max_hp))
         if i >= 3:
-            window.addstr(1 + 3 * (i - 3), 35, str(i) + '. EEE')
-            window.addstr(2 + 3 * (i - 3), 35, str(target_enemy_list[i].hp) + '/' + str(target_enemy_list[i].max_hp))
+            window.addstr(1 + 3 * (i - 3), 40, str(i) + '. EEE')
+            window.addstr(2 + 3 * (i - 3), 40, str(target_enemy_list[i].hp) + '/' + str(target_enemy_list[i].max_hp))
 
     #Printing hand
     for i in range(0, 60):
