@@ -10,6 +10,13 @@ import time
 from Resource import carddata
 from Resource import playerclass
 from Resource import enemyclass
+from Resource import skilldata
+
+#Drawing cards
+def draw_card(target_player):
+    if len(target_player.deck) > 0:
+        temp = target_player.deck.pop(0)
+        target_player.hand.append(temp)
 
 #Printing map
 def print_map(board):
@@ -22,16 +29,11 @@ def print_map(board):
             window.addstr(i, j * 4, "|")
         window.addstr(i, len(board[0]) * 4, "|")
 
-#Drawing cards
-def draw_card(target_player):
-    if len(target_player.deck) > 0:
-        temp = target_player.deck.pop(0)
-        target_player.hand.append(temp)
-
 #Printing player status
 def print_status(target_player):
     hp_percent = int(target_player.hp / target_player.max_hp * 100)
     energy_percent = int(target_player.energy / target_player.max_energy * 100)
+    exp_percent = int(target_player.exp / target_player.max_exp * 100)
     window.addstr(1, 41, 'HP ' + str(target_player.hp) + '/' + str(target_player.max_hp))
     window.addstr(2, 41, '(')
     window.addstr(2, 53, ')')
@@ -49,6 +51,15 @@ def print_status(target_player):
         for i in range(energy_percent // 10 + 1):
             window.addstr(4, 42 + i, '=', curses.color_pair(5))
 
+    window.addstr(6, 41, '(')
+    window.addstr(6, 53, ')')
+    window.addstr(5, 41, 'Exp ' + str(target_player.exp) + '/' + str(target_player.max_exp) + ' ' + str(exp_percent) + '%')
+    if exp_percent != 0:
+        for i in range(exp_percent // 10 + 1):
+            window.addstr(6, 42 + i, '=', curses.color_pair(3))
+
+    window.addstr(7, 41, 'Gold ')
+    window.addstr(7, 46, str(target_player.gold) + 'G', curses.color_pair(3))
 #Printing battle scene
 def print_battle(target_player, target_enemy_list):
     hp_percent = int(target_player.hp / target_player.max_hp * 100)
@@ -91,6 +102,19 @@ def print_battle(target_player, target_enemy_list):
     for i in range(0, 60):
         window.addstr(17, i, '=')
 
+    #Printing skill
+    window.addstr(0, 60, 'Skills')
+
+    for i in range(len(target_player.skill)):
+        window.addstr(1 + 5 * i, 60, str(player.skill[i][0]))
+        window.addstr(2 + 5 * i, 60, str(player.skill[i][1]))
+        window.addstr(3 + 5 * i, 60, 'Cooldown')
+        window.addstr(4 + 5 * i, 60, str(player.skill[i][2]) + '/' + str(player.skill[i][3]))
+
+    for i in range(15):
+        window.addstr(5, 60 + i, '=')
+
+    window.addstr(5, 59, '#')
     #Printing hp, energy bars
     window.addstr(18, 1, 'HP : ' + str(target_player.hp) + '/' + str(target_player.max_hp))
     window.addstr(18, 31, 'Energy : ' + str(target_player.energy) + '/' + str(target_player.max_energy))
@@ -216,6 +240,7 @@ try:
 
         #While player is in battle
         if battle_mode == True:
+            #Starting battle
             if battle_initiated == False:
                 enemy0 = enemyclass.Enemy(3, 12)
                 enemy1 = enemyclass.Enemy(3, 12)
@@ -226,8 +251,11 @@ try:
                 random.shuffle(player.deck)
                 for i in range(3):
                     draw_card(player)
+                for i in range(len(player.skill)):
+                    player.skill[i][2] = 0
                 battle_initiated = True
 
+            #Deleting enemies which health is below zero
             i = 0
             while i < len(enemy_list):
                 if enemy_list[i].hp <= 0:
@@ -235,6 +263,7 @@ try:
                 else:
                     i = i + 1
 
+            #Ending battle
             if len(enemy_list) == 0:
                 window.erase()
                 print_battle(player, enemy_list)
@@ -243,6 +272,9 @@ try:
 
                 curses.cbreak()
                 curses.curs_set(0)
+
+                player.exp += 10
+                player.gold += 10
                 a = window.getch()
                 battle_mode = False
                 map_board[player.pos[0]][player.pos[1]] = '   '
@@ -276,14 +308,14 @@ try:
                         if command[1] == '4' and len(enemy_list) > 4:
                             enemy_list[4].hp -= player.attack
 
-                if command[0] == 'draw':
-                    draw_card(player)
-
                 if command[0] == 'exit':
                     break
 
                 if command[0] == 'usecard':
                     carddata.use_card(command, player, enemy_list)
+
+                if command[0] == 'useskill':
+                    skilldata.use_skill(command, player, enemy_list)
 
     curses.endwin()
     sys.exit()
