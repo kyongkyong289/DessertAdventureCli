@@ -276,14 +276,14 @@ try:
                         if command[1] == '4' and len(enemy_list) > 4:
                             enemy_list[4].hp -= player.attack
 
-            if command[0] == 'draw':
-                draw_card(player)
+                if command[0] == 'draw':
+                    draw_card(player)
 
-            if command[0] == 'exit':
-                break
+                if command[0] == 'exit':
+                    break
 
-            if command[0] == 'usecard':
-                carddata.use_card(command, player, enemy_list)
+                if command[0] == 'usecard':
+                    carddata.use_card(command, player, enemy_list)
 
     curses.endwin()
     sys.exit()
