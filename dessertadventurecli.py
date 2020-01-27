@@ -90,6 +90,7 @@ try:
     curses.start_color()
     window.keypad(True)
 
+    #Setting color pairs
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
@@ -98,11 +99,17 @@ try:
     curses.init_pair(6, curses.COLOR_BLUE, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
 
+    #Declaring player class
     player = playerclass.Player()
+    
+    #Setting global flags
     battle_mode = False
     battle_initiated = False
+
+    #Declaring enemy list
     enemy_list = []
 
+    #Setting player's hand and deck
     player.hand = []
     player.deck = [[2, 'fireball'], [2, 'fireball'], [2, 'fireball'], [1, 'firebolt'], [1, 'firebolt'], [1, 'firebolt']]
 
@@ -150,6 +157,7 @@ try:
                 if map_board[player.pos[0]][player.pos[1] + 1] != 'WWW':
                     player.pos[1] += 1
 
+            #If player is trying to exit
             if move == 27:
                 break
 
