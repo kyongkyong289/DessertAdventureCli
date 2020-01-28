@@ -20,19 +20,19 @@ def use_card(command, target_player, target_enemies):
     if len(command) > 1:
         if int(command[1]) <= len(target_player.hand) - 1:
             if target_player.energy >= target_player.hand[int(command[1])][0]:
-                if target_player.hand[int(command[1])][1] == 'fireball':
+                if target_player.hand[int(command[1])][2] == 'fireball':
                     if len(command) > 2:
                         if int(command[2]) <= len(target_enemies) - 1:
                             target_player.energy -= target_player.hand[int(command[1])][0]
                             fireball(target_player, target_enemies[int(command[2])])
                             target_player.hand.pop(int(command[1]))
-                if target_player.hand[int(command[1])][1] == 'firebolt':
+                if target_player.hand[int(command[1])][2] == 'firebolt':
                     if len(command) > 2:
                         if int(command[2]) <= len(target_enemies) - 1:
                             target_player.energy -= target_player.hand[int(command[1])][0]
                             firebolt(target_player, target_enemies[int(command[2])])
                             target_player.hand.pop(int(command[1]))
-                if target_player.hand[int(command[1])][1] == 'firestorm':
+                if target_player.hand[int(command[1])][2] == 'firestorm':
                     target_player.energy -= target_player.hand[int(command[1])][0]
                     firestorm(target_player, target_enemies)
                     target_player.hand.pop(int(command[1]))

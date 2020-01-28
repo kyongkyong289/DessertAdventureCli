@@ -14,7 +14,8 @@ class Player:
     max_exp_level = [0, 50, 60, 70, 80, 100]
     max_exp = 25
     pos = [0, 0]
-    skill = [[0, 'draw', 0, 1], [2, 'firepunch', 0, 2]]
+    location = 'Village'
+    skill = []
     hand = []
     deck = []
     deck_original = []
