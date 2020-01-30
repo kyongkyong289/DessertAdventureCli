@@ -299,6 +299,7 @@ try:
 
             #If player is trying to exit
             if move == 27:
+                curses.endwin()
                 sys.exit()
 
             if map_board[player.pos[0]][player.pos[1]] == 'EEE':
@@ -322,6 +323,7 @@ try:
                     #Checking command
                     if len(command) > 0:
                         if command[0] == 'exit':
+                            curses.endwin()
                             sys.exit()
 
                         if command[0] == 'prev' and shop_scroll > 0:
@@ -437,6 +439,7 @@ try:
                             enemy_list[4].hp -= player.attack
 
                 if command[0] == 'exit':
+                    curses.endwin()
                     sys.exit()
 
                 if command[0] == 'usecard':
