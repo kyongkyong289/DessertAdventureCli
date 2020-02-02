@@ -19,7 +19,7 @@ git clone https://github.com/kyongkyong289/DessertAdventureCli
 ```
 > or download zip in https://github.com/kyongkyong289/DessertAdventureCli.  
 > 5. If you are using Windows  
-> open downloaded file and double click dessertadventurecli.py to play the game!
+> open downloaded file and double click dessertadventurecli.py to play the game!  
 > 5. If you are using Linux or Mac, go to the repository.  
 > 6. Play the game!
 ```
