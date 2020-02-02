@@ -11,6 +11,7 @@ from Resource import carddata
 from Resource import playerclass
 from Resource import enemyclass
 from Resource import skilldata
+from Resource import mapdata
 
 #Drawing cards
 def draw_card(target_player):
@@ -264,6 +265,8 @@ try:
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
                  ['   ', '   ', '   ', '   ', '@@@', '   ', '   ', '   ', '   ']]
 
+    temp = []
+
     #On screen
     while 1:
         if battle_mode == False:
@@ -296,6 +299,19 @@ try:
             if move == 96 + 4 and player.pos[1] < len(map_board[0]) - 1:
                 if map_board[player.pos[0]][player.pos[1] + 1] != 'WWW':
                     player.pos[1] += 1
+
+            #If player is trying to enter portal
+            if move == 96 + 5 and map_board[player.pos[0]][player.pos[1]] == '@@@':
+                if player.location == 'Village':
+                    player.location = 'Forest'
+                    map_board = []
+                    for i in range(len(mapdata.forest_1)):
+                        for j in range(len(mapdata.forest_1[0])):
+                            temp += [mapdata.forest_1[i][j]]
+                        map_board += [temp]
+                        temp = []
+                    player.pos[0] = 8
+                    player.pos[1] = 4
 
             #If player is trying to exit
             if move == 27:
