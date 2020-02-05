@@ -259,7 +259,7 @@ try:
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
                  ['   ', '   ', '$$$', '   ', '   ', '   ', '$$$', '   ', '   '],
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
-                 ['@@@', '   ', '   ', '   ', 'EEE', '   ', '   ', '   ', '@@@'],
+                 ['@@@', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '@@@'],
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
                  ['   ', '   ', '$$$', '   ', '   ', '   ', '$$$', '   ', '   '],
                  ['   ', '   ', '   ', '   ', '   ', '   ', '   ', '   ', '   '],
@@ -312,7 +312,19 @@ try:
                         temp = []
                     player.pos[0] = 8
                     player.pos[1] = 4
-
+                    continue
+                    
+                if player.location == 'Forest':
+                    player.location = 'Village'
+                    map_board = []
+                    for i in range(len(mapdata.village)):
+                        for j in range(len(mapdata.village[0])):
+                            temp += [mapdata.village[i][j]]
+                        map_board += [temp]
+                        temp = []
+                    player.pos[0] = 0
+                    player.pos[1] = 4
+                    
             #If player is trying to exit
             if move == 27:
                 curses.endwin()
@@ -424,6 +436,7 @@ try:
                 for i in range(len(player.hand)):
                     temp = player.hand.pop(0)
                     player.deck.append(temp)
+                    temp = []
             
                 continue
                 
@@ -463,6 +476,9 @@ try:
 
                 if command[0] == 'useskill':
                     skilldata.use_skill(command, player, enemy_list)
+                    
+                if command[0] == 'cheat':
+                    enemy_list = []
 
     curses.endwin()
     sys.exit()
@@ -470,5 +486,6 @@ try:
 #When things get wrong...
 except:
     curses.endwin()
+    print(map_board)
     traceback.print_exc()
     sys.exit()
