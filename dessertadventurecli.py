@@ -23,7 +23,7 @@ def draw_card(target_player):
 def print_map(board):
     for i in range(len(board)):
         for j in range(len(board[0])):
-            if board[i][j] == 'EEE':
+            if board[i][j] == 'EEE' or board[i][j] == 'BBB':
                 window.addstr(i, j * 4 + 1, board[i][j], curses.color_pair(2))
             elif board[i][j] == '$$$':
                 window.addstr(i, j * 4 + 1, board[i][j], curses.color_pair(3))
@@ -35,7 +35,7 @@ def print_map(board):
 
         window.addstr(i, len(board[0]) * 4, "|")
 
-    for i in range(0, 70):
+    for i in range(0, 80):
         window.addstr(15, i, '=')
 
     window.addstr(16, 1, str(player.location))
@@ -189,6 +189,27 @@ def print_win(target_gold, target_exp):
     window.addstr(5, 12, 'You got ' + str(target_exp) + ' exp.')
     window.addstr(6, 12, 'Press any key to continue.')
 
+def print_die():
+    window.addstr(2, 10, '#')
+    window.addstr(2, 49, '#')
+    window.addstr(8, 10, '#')
+    window.addstr(8, 49, '#')
+
+    for i in range(11, 49):
+        window.addstr(2, i, '=')
+        window.addstr(8, i, '=')
+
+    for i in range(3, 8):
+        window.addstr(i, 10, '|')
+        window.addstr(i, 49, '|')
+
+    for i in range(3, 8):
+        for j in range(11, 49):
+            window.addstr(i, j, ' ')
+
+    window.addstr(3, 12, 'You died!')
+    window.addstr(4, 12, 'Press any key to continue.')
+
 def print_shop(item_list, scroll):
     window.addstr(1, 2, '#')
     window.addstr(1, 38, '#')
@@ -238,6 +259,7 @@ try:
     #Setting global flags
     battle_mode = False
     battle_initiated = False
+    turn = 0
 
     #Declaring enemy list
     enemy_list = []
@@ -266,6 +288,7 @@ try:
                  ['   ', '   ', '   ', '   ', '@@@', '   ', '   ', '   ', '   ']]
 
     temp = []
+    random_temp = 0
 
     #On screen
     while 1:
@@ -305,36 +328,43 @@ try:
                 if player.location == 'Village':
                     player.location = 'Forest'
                     map_board = []
+
                     for i in range(len(mapdata.forest_1)):
                         for j in range(len(mapdata.forest_1[0])):
                             temp += [mapdata.forest_1[i][j]]
                         map_board += [temp]
                         temp = []
+
                     player.pos[0] = 8
                     player.pos[1] = 4
-                    continue
                     
-                if player.location == 'Forest':
+                elif player.location == 'Forest':
                     player.location = 'Village'
                     map_board = []
+
                     for i in range(len(mapdata.village)):
                         for j in range(len(mapdata.village[0])):
                             temp += [mapdata.village[i][j]]
                         map_board += [temp]
                         temp = []
+
                     player.pos[0] = 0
                     player.pos[1] = 4
-                    
+            
+            if move == 96 + 5 and map_board[player.pos[0]][player.pos[1]] == 'EEE':
+                battle_mode = True
+                battle_initiated = False
+
+            if move == 96 + 5 and map_board[player.pos[0]][player.pos[1]] == 'BBB':
+                battle_mode = True
+                battle_initiated = False
+
             #If player is trying to exit
             if move == 27:
                 curses.endwin()
                 sys.exit()
 
-            if map_board[player.pos[0]][player.pos[1]] == 'EEE':
-                battle_mode = True
-                battle_initiated = False
-
-            if map_board[player.pos[0]][player.pos[1]] == '$$$':
+            if move == 96 + 5 and map_board[player.pos[0]][player.pos[1]] == '$$$':
                 #Shop
                 while 1:
                     curses.echo()
@@ -393,12 +423,21 @@ try:
         if battle_mode == True:
             #Starting battle
             if battle_initiated == False:
-                enemy0 = enemyclass.Enemy(3, 12)
-                enemy1 = enemyclass.Enemy(3, 12)
-                enemy2 = enemyclass.Enemy(3, 12)
-                enemy3 = enemyclass.Enemy(4, 10)
-                enemy4 = enemyclass.Enemy(4, 10)
-                enemy_list = [enemy0, enemy1, enemy2, enemy3, enemy4]
+                if map_board[player.pos[0]][player.pos[1]] == 'EEE':
+                    enemy0 = enemyclass.Enemy(3, 12)
+                    enemy1 = enemyclass.Enemy(3, 12)
+                    enemy2 = enemyclass.Enemy(3, 12)
+                    enemy3 = enemyclass.Enemy(4, 10)
+                    enemy4 = enemyclass.Enemy(4, 10)
+                    enemy_list = [enemy0, enemy1, enemy2, enemy3, enemy4]
+
+                if map_board[player.pos[0]][player.pos[1]] == 'BBB':
+                    enemy0 = enemyclass.Enemy(4, 65)
+                    enemy_list = [enemy0]
+                    enemy0.skill = ['attack', 'spore']
+
+                turn = 0
+
                 random.shuffle(player.deck)
 
                 for i in range(3):
@@ -429,8 +468,14 @@ try:
 
                 player.exp += 10
                 player.gold += 10
+
+                if player.exp >= player.max_exp:
+                    player.level_up()
+
                 a = window.getch()
+                
                 battle_mode = False
+
                 map_board[player.pos[0]][player.pos[1]] = '   '
 
                 for i in range(len(player.hand)):
@@ -480,12 +525,65 @@ try:
                 if command[0] == 'cheat':
                     enemy_list = []
 
+                if command[0] == 'end':
+                    for i in range(len(enemy_list)):
+                        random_temp = random.randint(0, len(enemy_list[i].skill) - 1)
+
+                        if enemy_list[i].skill[random_temp] == 'attack':
+                            player.hp -= enemy_list[i].attack
+                        
+                        if enemy_list[i].skill[random_temp] == 'spore':
+                            enemyclass.spore(player, enemy_list[i])
+
+                    for i in range(len(player.skill)):
+                        if player.skill[i][3] > 0:
+                            player.skill[i][3] -= 1
+
+                    if turn % 3 == 2:
+                        if player.energy + 3 <= player.max_energy:
+                            player.energy += 3
+                        else:
+                            player.energy = player.max_energy
+
+                    turn += 1
+
+            if player.hp <= 0:
+                window.erase()
+                print_battle(player, enemy_list)
+                print_die()
+                window.refresh()
+                curses.cbreak()
+                curses.curs_set(0)
+
+                a = window.getch()
+
+                battle_mode = False
+
+                for i in range(len(player.hand)):
+                    temp = player.hand.pop(0)
+                    player.deck.append(temp)
+                    temp = []
+
+                player.hp = player.max_hp
+                player.energy = player.max_energy
+
+                map_board = []
+
+                for i in range(len(mapdata.village)):
+                    for j in range(len(mapdata.village[0])):
+                        temp += [mapdata.village[i][j]]
+                    map_board += [temp]
+                    temp = []
+
+                player.pos[0] = 4
+                player.pos[1] = 4
+                player.location = 'Village'
+
     curses.endwin()
     sys.exit()
 
 #When things get wrong...
 except:
     curses.endwin()
-    print(map_board)
     traceback.print_exc()
     sys.exit()
