@@ -18,6 +18,11 @@ def draw_card(target_player):
     if len(target_player.deck) > 0:
         temp = target_player.deck.pop(0)
         target_player.hand.append(temp)
+        
+#Pushing logs
+def push_log(log, content):
+    log.pop(0)
+    log.append(content)
 
 #Printing map
 def print_map(board):
@@ -164,6 +169,11 @@ def print_battle(target_player, target_enemy_list):
     window.addstr(19, 23, ')')
     window.addstr(19, 31, '(')
     window.addstr(19, 53, ')')
+    
+#Printing logs
+def print_log(log):
+    for i in range(len(log)):
+        window.addstr(20 + i, 1, str(log[i]))
 
 #Printing win window
 def print_win(target_gold, target_exp):
@@ -259,7 +269,10 @@ try:
     #Setting global flags
     battle_mode = False
     battle_initiated = False
-    turn = 0
+    
+    #Declaring game variables
+    turn = 1
+    game_log = ['', '', '', '']
 
     #Declaring enemy list
     enemy_list = []
@@ -436,7 +449,7 @@ try:
                     enemy_list = [enemy0]
                     enemy0.skill = ['attack', 'spore']
 
-                turn = 0
+                turn = 1
 
                 random.shuffle(player.deck)
 
@@ -461,6 +474,7 @@ try:
             if len(enemy_list) == 0:
                 window.erase()
                 print_battle(player, enemy_list)
+                print_log(game_log)
                 print_win(10, 10)
                 window.refresh()
                 curses.cbreak()
@@ -491,6 +505,7 @@ try:
             curses.curs_set(1)
             window.erase()
             print_battle(player, enemy_list)
+            print_log(game_log)
             window.move(11, 2)
             window.refresh()
 
@@ -503,14 +518,23 @@ try:
                     if len(command) > 1:
                         if command[1] == '0' and len(enemy_list) > 0:
                             enemy_list[0].hp -= player.attack
+                            push_log(game_log, 'You attacked ' + command[1] + 'th eneny with ' + str(player.attack) + ' damage.')
+                            
                         if command[1] == '1' and len(enemy_list) > 1:
                             enemy_list[1].hp -= player.attack
+                            push_log(game_log, 'You attacked ' + command[1] + 'th eneny with ' + str(player.attack) + ' damage.')
+                            
                         if command[1] == '2' and len(enemy_list) > 2:
                             enemy_list[2].hp -= player.attack
+                            push_log(game_log, 'You attacked ' + command[1] + 'th eneny with ' + str(player.attack) + ' damage.')
+                            
                         if command[1] == '3' and len(enemy_list) > 3:
                             enemy_list[3].hp -= player.attack
+                            push_log(game_log, 'You attacked ' + command[1] + 'th eneny with ' + str(player.attack) + ' damage.')
+                            
                         if command[1] == '4' and len(enemy_list) > 4:
                             enemy_list[4].hp -= player.attack
+                            push_log(game_log, 'You attacked ' + command[1] + 'th eneny with ' + str(player.attack) + ' damage.')
 
                 if command[0] == 'exit':
                     curses.endwin()
@@ -531,9 +555,11 @@ try:
 
                         if enemy_list[i].skill[random_temp] == 'attack':
                             player.hp -= enemy_list[i].attack
-                        
+                            push_log(game_log, 'Enemy attacked you with ' + str(enemy_list[i].attack) + ' damage.')
+                            
                         if enemy_list[i].skill[random_temp] == 'spore':
                             enemyclass.spore(player, enemy_list[i])
+                            push_log(game_log, 'Enemy used spore to you! Your card\'s cost increased!')
 
                     for i in range(len(player.skill)):
                         if player.skill[i][3] > 0:
@@ -550,6 +576,7 @@ try:
             if player.hp <= 0:
                 window.erase()
                 print_battle(player, enemy_list)
+                print_log(game_log)
                 print_die()
                 window.refresh()
                 curses.cbreak()
