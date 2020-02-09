@@ -172,8 +172,21 @@ def print_battle(target_player, target_enemy_list):
     
 #Printing logs
 def print_log(log):
+    for i in range(20, 24):
+        for j in range(80):
+            window.addstr(i, j, ' ')
+
     for i in range(len(log)):
         window.addstr(20 + i, 1, str(log[i]))
+
+#Printing Description
+def print_description(target_enemy):
+    for i in range(20, 24):
+            for j in range(80):
+                window.addstr(i, j, ' ')
+
+    window.addstr(20, 1, 'ATK : ' + str(target_enemy.attack) + ' HP : ' + str(target_enemy.max_hp))
+    window.addstr(21, 1, 'The weakest enemy.')
 
 #Printing win window
 def print_win(target_gold, target_exp):
@@ -276,6 +289,9 @@ try:
 
     #Declaring enemy list
     enemy_list = []
+    
+    #Declaring description
+    description = []
 
     #Declaring shop
     shop_item_list = [[25, 'strawberry_juice'], [30, 'lemonade'], [45, 'blueberry_juice'], [25, 'strawberry_juice'], [30, 'lemonade'], [45, 'blueberry_juice'], 
@@ -572,6 +588,40 @@ try:
                             player.energy = player.max_energy
 
                     turn += 1
+
+                if command[0] == 'examine':
+                    if len(command) > 1:
+                        if command[1] == 'enemy':
+                            if len(command) > 2:
+                                if command[2] == '0' and len(enemy_list) > 0:
+                                    print_description(enemy_list[0])
+                                    window.refresh()
+                                    curses.cbreak()
+                                    a = window.getch()
+
+                                if command[2] == '1' and len(enemy_list) > 1:
+                                    print_description(enemy_list[1])
+                                    window.refresh()
+                                    curses.cbreak()
+                                    a = window.getch()
+
+                                if command[2] == '2' and len(enemy_list) > 2:
+                                    print_description(enemy_list[2])
+                                    window.refresh()
+                                    curses.cbreak()
+                                    a = window.getch()
+
+                                if command[2] == '3' and len(enemy_list) > 3:
+                                    print_description(enemy_list[3])
+                                    window.refresh()
+                                    curses.cbreak()
+                                    a = window.getch()
+
+                                if command[2] == '4' and len(enemy_list) > 4:
+                                    print_description(enemy_list[4])
+                                    window.refresh()
+                                    curses.cbreak()
+                                    a = window.getch()
 
             if player.hp <= 0:
                 window.erase()
